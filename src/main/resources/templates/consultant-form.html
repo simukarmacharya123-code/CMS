@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Consultant Form</title>
+</head>
+
+<body>
+
+<h1>Add Consultant</h1>
+
+<form th:action="@{/consultants/save}"
+      th:object="${consultant}"
+      method="post">
+
+    <div>
+        <label>Name:</label>
+        <input type="text" th:field="*{name}">
+        <span th:if="${#fields.hasErrors('name')}"
+              th:errors="*{name}"></span>
+    </div>
+
+    <br>
+
+    <div>
+        <label>Email:</label>
+        <input type="text" th:field="*{email}">
+        <span th:if="${#fields.hasErrors('email')}"
+              th:errors="*{email}"></span>
+    </div>
+
+    <br>
+
+    <div>
+        <label>Phone:</label>
+        <input type="text" th:field="*{phone}">
+        <span th:if="${#fields.hasErrors('phone')}"
+              th:errors="*{phone}"></span>
+    </div>
+
+    <br>
+
+    <div>
+        <label>Technology:</label>
+        <input type="text" th:field="*{technology}">
+        <span th:if="${#fields.hasErrors('technology')}"
+              th:errors="*{technology}"></span>
+    </div>
+
+    <br>
+
+    <div>
+        <label>Experience:</label>
+        <input type="number" th:field="*{experience}">
+        <span th:if="${#fields.hasErrors('experience')}"
+              th:errors="*{experience}"></span>
+    </div>
+
+    <br>
+
+    <button type="submit">Save Consultant</button>
+
+</form>
+
+<br>
+
+<a href="/consultants">Back to Consultants</a>
+
+</body>
+</html>
