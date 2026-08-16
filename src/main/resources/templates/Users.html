@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>User Management</title>
+
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+            rel="stylesheet">
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-dark bg-dark">
+
+    <div class="container">
+
+        <a class="navbar-brand"
+           href="/consultants/dashboard">
+
+            Consultant Management
+
+        </a>
+
+    </div>
+
+</nav>
+
+<div class="container mt-5">
+
+    <div class="d-flex justify-content-between
+                align-items-center mb-4">
+
+        <h1>User Management</h1>
+
+        <a href="/users/new"
+           class="btn btn-primary">
+
+            Add User
+
+        </a>
+
+    </div>
+
+    <div class="table-responsive">
+
+        <table class="table table-bordered
+                      table-striped table-hover">
+
+            <thead class="table-dark">
+
+            <tr>
+
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+
+            </tr>
+
+            </thead>
+
+            <tbody>
+
+            <tr th:each="user : ${users}">
+
+                <td th:text="${user.id}"></td>
+
+                <td th:text="${user.username}"></td>
+
+                <td th:text="${user.email}"></td>
+
+                <td>
+
+                    <span
+                            class="badge bg-primary"
+                            th:text="${user.role}">
+                    </span>
+
+                </td>
+
+                <td>
+
+                    <a
+                            th:href="@{/users/edit/{id}(id=${user.id})}"
+                            class="btn btn-sm btn-primary">
+
+                        Edit
+
+                    </a>
+
+                    <a
+                            th:href="@{/users/delete/{id}(id=${user.id})}"
+                            class="btn btn-sm btn-danger"
+                            onclick="return confirm('Delete this user?');">
+
+                        Delete
+
+                    </a>
+
+                </td>
+
+            </tr>
+
+            <tr th:if="${users.isEmpty()}">
+
+                <td colspan="5"
+                    class="text-center">
+
+                    No users found.
+
+                </td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <a href="/consultants/dashboard"
+       class="btn btn-outline-dark">
+
+        Back to Dashboard
+
+    </a>
+
+</div>
+
+</body>
+
+</html>

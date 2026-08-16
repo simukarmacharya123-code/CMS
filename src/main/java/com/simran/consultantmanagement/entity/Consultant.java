@@ -2,6 +2,7 @@ package com.simran.consultantmanagement.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "consultants")
@@ -29,8 +30,12 @@ public class Consultant {
     @NotNull(message = "Experience is required")
     @Min(value = 0, message = "Experience cannot be negative")
     private Integer experience;
+    private String status;
+    private LocalDate joinedDate;
 
     public Consultant() {
+        this.status = "Available";
+        this.joinedDate = LocalDate.now();
     }
 
     public Consultant(String name, String email, String phone,
@@ -40,6 +45,8 @@ public class Consultant {
         this.phone = phone;
         this.technology = technology;
         this.experience = experience;
+        this.status = "Available";
+        this.joinedDate = LocalDate.now();
     }
 
     public Long getId() {
@@ -88,5 +95,20 @@ public class Consultant {
 
     public void setExperience(Integer experience) {
         this.experience = experience;
+    }
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public LocalDate getJoinedDate() {
+        return joinedDate;
+    }
+
+    public void setJoinedDate(LocalDate joinedDate) {
+        this.joinedDate = joinedDate;
     }
 }

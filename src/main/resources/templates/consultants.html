@@ -1,67 +1,292 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>Consultant Management</title>
 
     <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
             rel="stylesheet">
+
+    <style>
+
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 500;
+        }
+
+        .sort-link {
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .sort-link:hover {
+            color: #d9eaff;
+        }
+
+        .table th {
+            white-space: nowrap;
+        }
+
+        .status-badge {
+            font-size: 0.85rem;
+        }
+
+    </style>
+
 </head>
+
 
 <body>
 
+
+<!-- ========================================================= -->
+<!-- NAVBAR -->
+<!-- ========================================================= -->
+
 <nav class="navbar navbar-dark bg-dark">
+
     <div class="container">
-        <a class="navbar-brand" href="/consultants/dashboard">
+
+        <a class="navbar-brand"
+           href="/consultants/dashboard">
+
             Consultant Management
+
         </a>
+
     </div>
+
 </nav>
+
+
+<!-- ========================================================= -->
+<!-- MAIN CONTAINER -->
+<!-- ========================================================= -->
 
 <div class="container mt-5">
 
-    <!-- Page Heading -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
 
-        <h1>Consultants</h1>
+    <!-- ===================================================== -->
+    <!-- SUCCESS NOTIFICATION -->
+    <!-- ===================================================== -->
 
-        <a href="/consultants/new" class="btn btn-success">
+    <div
+            th:if="${successMessage}"
+            class="alert alert-success alert-dismissible fade show"
+            role="alert">
+
+        <strong>Success!</strong>
+
+        <span th:text="${successMessage}">
+            Consultant action completed successfully!
+        </span>
+
+        <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close">
+        </button>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- PAGE HEADING -->
+    <!-- ===================================================== -->
+
+    <div
+            class="d-flex justify-content-between align-items-center mb-4">
+
+        <h1 class="page-title">
+            Consultants
+        </h1>
+
+        <a
+                href="/consultants/new"
+                class="btn btn-success">
+
             Add Consultant
+
         </a>
 
     </div>
 
 
-    <!-- Search -->
-    <form action="/consultants" method="get" class="row g-2 mb-4">
+    <!-- ===================================================== -->
+    <!-- SEARCH + FILTER -->
+    <!-- ===================================================== -->
 
-        <div class="col-md-6">
+    <form
+            action="/consultants"
+            method="get"
+            class="row g-3 mb-4">
+
+
+        <!-- Search -->
+
+        <div class="col-md-4">
+
+            <label class="form-label">
+                Search
+            </label>
 
             <input
                     type="text"
                     name="keyword"
                     th:value="${keyword}"
                     class="form-control"
-                    placeholder="Search by name or technology">
+                    placeholder="Name or technology">
 
         </div>
 
-        <div class="col-auto">
 
-            <button type="submit" class="btn btn-primary">
+        <!-- Status -->
+
+        <div class="col-md-3">
+
+            <label class="form-label">
+                Status
+            </label>
+
+            <select
+                    name="status"
+                    class="form-select">
+
+                <option value="">
+                    All Statuses
+                </option>
+
+                <option
+                        value="Active"
+                        th:selected="${status == 'Active'}">
+
+                    Active
+
+                </option>
+
+                <option
+                        value="Available"
+                        th:selected="${status == 'Available'}">
+
+                    Available
+
+                </option>
+
+                <option
+                        value="On Project"
+                        th:selected="${status == 'On Project'}">
+
+                    On Project
+
+                </option>
+
+                <option
+                        value="Inactive"
+                        th:selected="${status == 'Inactive'}">
+
+                    Inactive
+
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- Page size -->
+
+        <div class="col-md-2">
+
+            <label class="form-label">
+                Per Page
+            </label>
+
+            <select
+                    name="size"
+                    class="form-select">
+
+                <option
+                        value="5"
+                        th:selected="${size == 5}">
+
+                    5
+
+                </option>
+
+                <option
+                        value="10"
+                        th:selected="${size == 10}">
+
+                    10
+
+                </option>
+
+                <option
+                        value="25"
+                        th:selected="${size == 25}">
+
+                    25
+
+                </option>
+
+                <option
+                        value="50"
+                        th:selected="${size == 50}">
+
+                    50
+
+                </option>
+
+                <option
+                        value="100"
+                        th:selected="${size == 100}">
+
+                    100
+
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- Buttons -->
+
+        <div
+                class="col-md-3 d-flex align-items-end">
+
+            <button
+                    type="submit"
+                    class="btn btn-primary me-2">
+
                 Search
+
             </button>
 
-        </div>
+            <a
+                    href="/consultants"
+                    class="btn btn-secondary">
 
-        <div class="col-auto">
-
-            <a href="/consultants" class="btn btn-secondary">
                 Clear
+
             </a>
 
         </div>
@@ -69,55 +294,472 @@
     </form>
 
 
-    <!-- Consultant Table -->
+    <!-- ===================================================== -->
+    <!-- CONSULTANT COUNT -->
+    <!-- ===================================================== -->
+
+    <div class="mb-3">
+
+        <span>
+
+            Showing
+
+            <strong
+                    th:text="${consultants.numberOfElements}">
+                0
+            </strong>
+
+            of
+
+            <strong
+                    th:text="${consultants.totalElements}">
+                0
+            </strong>
+
+            consultants
+
+        </span>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- TABLE -->
+    <!-- ===================================================== -->
+
     <div class="table-responsive">
 
-        <table class="table table-bordered table-striped table-hover">
+        <table
+                class="table table-bordered table-striped table-hover">
+
+
+            <!-- ================================================= -->
+            <!-- TABLE HEADER -->
+            <!-- ================================================= -->
 
             <thead class="table-dark">
 
             <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Technology</th>
-                <th>Experience</th>
-                <th>Actions</th>
+
+
+                <!-- ID -->
+
+                <th>
+
+                    <a
+                            class="sort-link"
+                            th:href="@{/consultants(
+                                keyword=${keyword},
+                                status=${status},
+                                page=0,
+                                size=${size},
+                                sortBy='id',
+                                sortDirection=${sortBy == 'id' and sortDirection == 'asc' ? 'desc' : 'asc'}
+                            )}">
+
+                        ID
+
+                        <span
+                                th:if="${sortBy == 'id' and sortDirection == 'asc'}">
+
+                            ↑
+
+                        </span>
+
+                        <span
+                                th:if="${sortBy == 'id' and sortDirection == 'desc'}">
+
+                            ↓
+
+                        </span>
+
+                    </a>
+
+                </th>
+
+
+                <!-- NAME -->
+
+                <th>
+
+                    <a
+                            class="sort-link"
+                            th:href="@{/consultants(
+                                keyword=${keyword},
+                                status=${status},
+                                page=0,
+                                size=${size},
+                                sortBy='name',
+                                sortDirection=${sortBy == 'name' and sortDirection == 'asc' ? 'desc' : 'asc'}
+                            )}">
+
+                        Name
+
+                        <span
+                                th:if="${sortBy == 'name' and sortDirection == 'asc'}">
+
+                            ↑
+
+                        </span>
+
+                        <span
+                                th:if="${sortBy == 'name' and sortDirection == 'desc'}">
+
+                            ↓
+
+                        </span>
+
+                    </a>
+
+                </th>
+
+
+                <!-- EMAIL -->
+
+                <th>
+
+                    <a
+                            class="sort-link"
+                            th:href="@{/consultants(
+                                keyword=${keyword},
+                                status=${status},
+                                page=0,
+                                size=${size},
+                                sortBy='email',
+                                sortDirection=${sortBy == 'email' and sortDirection == 'asc' ? 'desc' : 'asc'}
+                            )}">
+
+                        Email
+
+                        <span
+                                th:if="${sortBy == 'email' and sortDirection == 'asc'}">
+
+                            ↑
+
+                        </span>
+
+                        <span
+                                th:if="${sortBy == 'email' and sortDirection == 'desc'}">
+
+                            ↓
+
+                        </span>
+
+                    </a>
+
+                </th>
+
+
+                <!-- PHONE -->
+
+                <th>
+
+                    <a
+                            class="sort-link"
+                            th:href="@{/consultants(
+                                keyword=${keyword},
+                                status=${status},
+                                page=0,
+                                size=${size},
+                                sortBy='phone',
+                                sortDirection=${sortBy == 'phone' and sortDirection == 'asc' ? 'desc' : 'asc'}
+                            )}">
+
+                        Phone
+
+                        <span
+                                th:if="${sortBy == 'phone' and sortDirection == 'asc'}">
+
+                            ↑
+
+                        </span>
+
+                        <span
+                                th:if="${sortBy == 'phone' and sortDirection == 'desc'}">
+
+                            ↓
+
+                        </span>
+
+                    </a>
+
+                </th>
+
+
+                <!-- TECHNOLOGY -->
+
+                <th>
+
+                    <a
+                            class="sort-link"
+                            th:href="@{/consultants(
+                                keyword=${keyword},
+                                status=${status},
+                                page=0,
+                                size=${size},
+                                sortBy='technology',
+                                sortDirection=${sortBy == 'technology' and sortDirection == 'asc' ? 'desc' : 'asc'}
+                            )}">
+
+                        Technology
+
+                        <span
+                                th:if="${sortBy == 'technology' and sortDirection == 'asc'}">
+
+                            ↑
+
+                        </span>
+
+                        <span
+                                th:if="${sortBy == 'technology' and sortDirection == 'desc'}">
+
+                            ↓
+
+                        </span>
+
+                    </a>
+
+                </th>
+
+
+                <!-- EXPERIENCE -->
+
+                <th>
+
+                    <a
+                            class="sort-link"
+                            th:href="@{/consultants(
+                                keyword=${keyword},
+                                status=${status},
+                                page=0,
+                                size=${size},
+                                sortBy='experience',
+                                sortDirection=${sortBy == 'experience' and sortDirection == 'asc' ? 'desc' : 'asc'}
+                            )}">
+
+                        Experience
+
+                        <span
+                                th:if="${sortBy == 'experience' and sortDirection == 'asc'}">
+
+                            ↑
+
+                        </span>
+
+                        <span
+                                th:if="${sortBy == 'experience' and sortDirection == 'desc'}">
+
+                            ↓
+
+                        </span>
+
+                    </a>
+
+                </th>
+
+
+                <!-- STATUS -->
+
+                <th>
+
+                    <a
+                            class="sort-link"
+                            th:href="@{/consultants(
+                                keyword=${keyword},
+                                status=${status},
+                                page=0,
+                                size=${size},
+                                sortBy='status',
+                                sortDirection=${sortBy == 'status' and sortDirection == 'asc' ? 'desc' : 'asc'}
+                            )}">
+
+                        Status
+
+                        <span
+                                th:if="${sortBy == 'status' and sortDirection == 'asc'}">
+
+                            ↑
+
+                        </span>
+
+                        <span
+                                th:if="${sortBy == 'status' and sortDirection == 'desc'}">
+
+                            ↓
+
+                        </span>
+
+                    </a>
+
+                </th>
+
+
+                <!-- JOINED DATE -->
+
+                <th>
+
+                    <a
+                            class="sort-link"
+                            th:href="@{/consultants(
+                                keyword=${keyword},
+                                status=${status},
+                                page=0,
+                                size=${size},
+                                sortBy='joinedDate',
+                                sortDirection=${sortBy == 'joinedDate' and sortDirection == 'asc' ? 'desc' : 'asc'}
+                            )}">
+
+                        Joined Date
+
+                        <span
+                                th:if="${sortBy == 'joinedDate' and sortDirection == 'asc'}">
+
+                            ↑
+
+                        </span>
+
+                        <span
+                                th:if="${sortBy == 'joinedDate' and sortDirection == 'desc'}">
+
+                            ↓
+
+                        </span>
+
+                    </a>
+
+                </th>
+
+
+                <!-- ACTIONS -->
+
+                <th>
+                    Actions
+                </th>
+
             </tr>
 
             </thead>
 
 
+            <!-- ================================================= -->
+            <!-- TABLE BODY -->
+            <!-- ================================================= -->
+
             <tbody>
 
-            <tr th:each="consultant : ${consultants}">
+            <tr
+                    th:each="consultant : ${consultants.content}">
 
-                <td th:text="${consultant.id}"></td>
 
-                <td th:text="${consultant.name}"></td>
+                <td
+                        th:text="${consultant.id}">
+                    1
+                </td>
 
-                <td th:text="${consultant.email}"></td>
 
-                <td th:text="${consultant.phone}"></td>
+                <td
+                        th:text="${consultant.name}">
+                    Name
+                </td>
 
-                <td th:text="${consultant.technology}"></td>
 
-                <td th:text="${consultant.experience}"></td>
+                <td
+                        th:text="${consultant.email}">
+                    email@example.com
+                </td>
+
+
+                <td
+                        th:text="${consultant.phone}">
+                    Phone
+                </td>
+
+
+                <td
+                        th:text="${consultant.technology}">
+                    Java
+                </td>
+
+
+                <td>
+
+                    <span
+                            th:if="${consultant.experience != null}"
+                            th:text="${consultant.experience + ' years'}">
+
+                        5 years
+
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    <span
+                            class="badge status-badge"
+                            th:text="${consultant.status}"
+                            th:classappend="
+                            ${consultant.status == 'Active'
+                            ? ' bg-success'
+                            : consultant.status == 'Available'
+                            ? ' bg-primary'
+                            : consultant.status == 'On Project'
+                            ? ' bg-warning text-dark'
+                            : ' bg-secondary'}">
+
+                        Available
+
+                    </span>
+
+                </td>
+
+
+                <td
+                        th:text="${consultant.joinedDate}">
+
+                    2026-08-15
+
+                </td>
+
+
+                <!-- ACTION BUTTONS -->
 
                 <td>
 
                     <a
                             th:href="@{/consultants/edit/{id}(id=${consultant.id})}"
                             class="btn btn-sm btn-primary">
+
                         Edit
+
                     </a>
+
 
                     <a
                             th:href="@{/consultants/delete/{id}(id=${consultant.id})}"
-                            class="btn btn-sm btn-danger">
+                            class="btn btn-sm btn-danger"
+                            onclick="return confirm('Are you sure you want to delete this consultant?');">
+
                         Delete
+
                     </a>
+
+                </td>
+
+            </tr>
+
+
+            <!-- NO RESULTS -->
+
+            <tr
+                    th:if="${consultants.totalElements == 0}">
+
+                <td
+                        colspan="9"
+                        class="text-center py-4">
+
+                    No consultants found.
 
                 </td>
 
@@ -130,17 +772,117 @@
     </div>
 
 
-    <!-- Back to Dashboard -->
-    <div class="mt-3">
+    <!-- ===================================================== -->
+    <!-- PAGINATION -->
+    <!-- ===================================================== -->
 
-        <a href="/consultants/dashboard" class="btn btn-outline-dark">
+    <nav
+            th:if="${consultants.totalPages > 1}"
+            class="mt-4">
+
+        <ul class="pagination justify-content-center">
+
+
+            <!-- PREVIOUS -->
+
+            <li
+                    class="page-item"
+                    th:classappend="${consultants.first ? 'disabled' : ''}">
+
+                <a
+                        class="page-link"
+                        th:href="@{/consultants(
+                            keyword=${keyword},
+                            status=${status},
+                            page=${consultants.number - 1},
+                            size=${size},
+                            sortBy=${sortBy},
+                            sortDirection=${sortDirection}
+                        )}">
+
+                    Previous
+
+                </a>
+
+            </li>
+
+
+            <!-- PAGE NUMBERS -->
+
+            <li
+                    th:each="i : ${#numbers.sequence(0, consultants.totalPages - 1)}"
+                    class="page-item"
+                    th:classappend="${i == consultants.number ? 'active' : ''}">
+
+                <a
+                        class="page-link"
+                        th:href="@{/consultants(
+                            keyword=${keyword},
+                            status=${status},
+                            page=${i},
+                            size=${size},
+                            sortBy=${sortBy},
+                            sortDirection=${sortDirection}
+                        )}"
+                        th:text="${i + 1}">
+
+                    1
+
+                </a>
+
+            </li>
+
+
+            <!-- NEXT -->
+
+            <li
+                    class="page-item"
+                    th:classappend="${consultants.last ? 'disabled' : ''}">
+
+                <a
+                        class="page-link"
+                        th:href="@{/consultants(
+                            keyword=${keyword},
+                            status=${status},
+                            page=${consultants.number + 1},
+                            size=${size},
+                            sortBy=${sortBy},
+                            sortDirection=${sortDirection}
+                        )}">
+
+                    Next
+
+                </a>
+
+            </li>
+
+        </ul>
+
+    </nav>
+
+
+    <!-- ===================================================== -->
+    <!-- BACK TO DASHBOARD -->
+    <!-- ===================================================== -->
+
+    <div class="mt-4 mb-5">
+
+        <a
+                href="/consultants/dashboard"
+                class="btn btn-outline-dark">
+
             Back to Dashboard
+
         </a>
 
     </div>
 
 </div>
 
+
+<!-- ========================================================= -->
+<!-- BOOTSTRAP JAVASCRIPT -->
+<!-- ========================================================= -->
 
 <script
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
